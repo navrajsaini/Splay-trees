@@ -13,5 +13,14 @@ using namespace std;
 
 int main()
 {
-   cout << "sup" << endl;
+   splayt a;
+   int val;
+   char exit = 'n';
+   while (exit == 'n')
+   {
+      cout << "please insert a int into the splay tree: ";
+      cin >> val;
+      a.insert(val);
+      
+   }
 }

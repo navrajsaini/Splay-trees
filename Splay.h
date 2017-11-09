@@ -10,15 +10,28 @@ using namespace std;
 
 class splayt
 {
-  private:
+  public:
    // nodes for the splay tree, points to left, right and parent
    // of the node the user is at....
-   class node
+   struct node
    {
      public:
       int data;
       node *left, *right, *parent;
-     node(int) : left (NULL), right (NULL), parent(NULL), data (0) {}
+      node()
+      {
+	 left = NULL;
+	 right = NULL;
+	 parent = NULL;
+	 data = 0;
+      }
+      node (int a)
+      {
+	 left = NULL;
+	 right = NULL;
+	 parent = NULL;
+	 data = a;
+      }
       ~node(){}
       
    } *root;
@@ -155,8 +168,6 @@ class splayt
       if (b)
 	 b -> parent = a -> parent;
    }
-  public:
-   
    //insert a key into the splay tree
    void insert (int d)
    {
@@ -226,6 +237,11 @@ class splayt
       }
       delete a;
       size--;
+   }
+
+   void print()
+   {
+      
    }
 };
 
