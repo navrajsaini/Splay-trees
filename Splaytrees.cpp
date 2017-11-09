@@ -14,6 +14,7 @@ using namespace std;
 int main()
 {
    splayt a;
+   
    int val;
    char exit = 'n';
    while (exit == 'n')
@@ -21,6 +22,9 @@ int main()
       cout << "please insert a int into the splay tree: ";
       cin >> val;
       a.insert(val);
-      
+      cout << "print here: " << endl;
+      a.print();
+      cout << endl << "done printing" << endl;
    }
+   return 0;
 }

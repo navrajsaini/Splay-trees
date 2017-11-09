@@ -11,7 +11,7 @@
 # use the gnu C++ compiler program, g++
 CCC = g++
 # list all warnings
-CCCFLAGS = -Wall -g -std=c++11 -lpthread -lX11
+CCCFLAGS = -Wall -g -std=gnu++11 -lpthread -lX11
 
 # all is called a target, after the colon you have dependencies
 # ie. "the target all is dependent on the executables

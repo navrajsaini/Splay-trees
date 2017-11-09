@@ -5,17 +5,19 @@
 #define SPLAY_H
 
 #include <iostream>
-
+#include <new>
 using namespace std;
 
 class splayt
 {
   public:
+   friend class node;
    // nodes for the splay tree, points to left, right and parent
    // of the node the user is at....
+   
    struct node
    {
-     public:
+   public:
       int data;
       node *left, *right, *parent;
       node()
@@ -35,7 +37,8 @@ class splayt
       ~node(){}
       
    } *root;
-   
+   splayt() : root(NULL), size(0) { }
+
    //size of the tree
    int size;
 
@@ -60,9 +63,6 @@ class splayt
    {
       // new nodes point to root node's left sub tree
       node *a = x -> left;
-
-      if (! x -> parent)
-	 root = a;
       
       // if the right side of x exits:
 
@@ -73,14 +73,15 @@ class splayt
       //    make a's right (x's left's right) parent x
 
       //  point a's parent (x's left's parent) to x's parent
-      if(x -> left)
+      if(a)
       {
 	 x -> left = a -> right;
 	 if(a -> right)
 	    a -> right -> parent = x;
 	 a -> parent = x -> parent;
       }
-
+      if( !x -> parent)
+	 root = a;
       else if (x == x -> parent -> left)
 	 x -> parent -> left = a;
 
@@ -97,8 +98,7 @@ class splayt
    {
       node *a = x -> right;
       
-      if (! x -> parent)
-	 root = a;
+
 
       if(a)
       {
@@ -107,7 +107,8 @@ class splayt
 	    a -> left -> parent = x;
 	 a -> parent = x -> parent;
       }
-
+      if (! x -> parent)
+	 root = a;
       else if (x == x -> parent -> left)
 	 x -> parent -> left = a;
 
@@ -122,40 +123,49 @@ class splayt
    // now for the actual splay....
    void splay (node *x)
    {
+      cout << "entering the while loop in splay" << endl;
       while (x -> parent)
       {
-	 if (x -> parent -> parent -> left == x -> parent &&
-	     x -> parent -> left == x)
+	 if( !x -> parent -> parent )
 	 {
-	    RRotate (x -> parent -> parent);
-	    RRotate (x -> parent);
-	 }
-	 else if (!x -> parent -> parent)
-	 {
-	    if (x -> parent -> left == x)
-	       RRotate (x -> parent);
+	    cout << "in the first if" << endl;
+	    if( x->parent->left == x )
+	       RRotate( x->parent );
 	    else
-	       LRotate (x -> parent);
+	       LRotate( x->parent );
 	 }
-	 else if (x -> parent -> parent -> right == x -> parent &&
-		  x -> parent -> right)
+	 else if( x->parent->left == x &&
+		  x->parent->parent->left == x->parent )
 	 {
-	    LRotate (x -> parent -> parent);
-	    LRotate (x -> parent);
+	    cout << "in the first else if" << endl;
+	    RRotate( x->parent->parent );
+	    RRotate( x->parent );
 	 }
-	 else if(x -> parent -> left == x &&
-		 x -> parent -> parent -> right == x -> parent)
+	 else if( x->parent->right == x &&
+		    x->parent->parent->right == x->parent )
 	 {
-	    RRotate (x -> parent);
-	    LRotate (x -> parent);
+	    cout << "in the 2nd else if" << endl;
+	    LRotate( x->parent->parent );
+	    LRotate( x->parent );
+	 }
+	 else if( x->parent->left == x &&
+		    x->parent->parent->right == x->parent )
+	 {
+	    cout << "in the 3rd else if" << endl;
+	    RRotate( x -> parent );
+	    LRotate( x -> parent );
 	 }
 	 else
 	 {
-	    LRotate (x -> parent);
-	    RRotate (x -> parent);
+	    cout << "last, entering the LR" << endl;
+	    LRotate( x -> parent );
+	    cout << "entering the RR" << endl;
+	    RRotate( x -> parent );
+	    cout << "out of the RR?" << endl;
 	 }
       }
-   }
+      	 cout << "end of the while loop" << endl;
+    }
 
    void replace (node *a, node *b)
    {
@@ -177,21 +187,30 @@ class splayt
       while (a)
       {
 	 b = a;
+	 cout << "in the while loop FML" << endl;
 	 if (a -> data < d)
+	 {
+	    cout << " in the if loop: " <<endl;
 	    a = a -> right;
+	    cout << "out of the loop" <<endl;
+	    
+	 }
 	 else
 	    a = a -> left;
+	 cout << "out of the if/else in the while" << endl;
       }
-      
+
+      cout << "out of the while loop" << endl;
       a = new node (d);
       a -> parent = b;
-
+      
       if(!b)
 	 root = a;
       else if (b -> data < a -> data)
 	 b -> right = a;
       else
 	 b -> left = a;
+      cout << "about to splay: " << endl;
       splay(a);
       size++;
    }
@@ -241,7 +260,8 @@ class splayt
 
    void print()
    {
-      
+      cout << "print seg fault?" << endl;
+      cout << root->data<< endl;
    }
 };
 
