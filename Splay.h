@@ -18,7 +18,7 @@ class splayt
    struct node
    {
    public:
-      int data;
+      double data;
       node *left, *right, *parent;
       node()
       {
@@ -27,7 +27,7 @@ class splayt
 	 parent = NULL;
 	 data = 0;
       }
-      node (int a)
+      node (double a)
       {
 	 left = NULL;
 	 right = NULL;
@@ -35,6 +35,11 @@ class splayt
 	 data = a;
       }
       ~node(){}
+
+      void print()
+      {
+	 cout << data << endl;
+      }
       
    } *root;
    splayt() : root(NULL), size(0) { }
@@ -45,9 +50,12 @@ class splayt
    // minimum subtree
    node* mini(node *a)
    {
+      //cout << "in mini..." << endl;
+
       if (!a -> left)
 	 return a;
-      mini(a -> left);
+	 return mini(a -> left);
+
    }
 
    //maximum subtree
@@ -123,12 +131,12 @@ class splayt
    // now for the actual splay....
    void splay (node *x)
    {
-      cout << "entering the while loop in splay" << endl;
+      //cout << "entering the while loop in splay" << endl;
       while (x -> parent)
       {
 	 if( !x -> parent -> parent )
 	 {
-	    cout << "in the first if" << endl;
+	    //cout << "in the first if" << endl;
 	    if( x->parent->left == x )
 	       RRotate( x->parent );
 	    else
@@ -137,37 +145,37 @@ class splayt
 	 else if( x->parent->left == x &&
 		  x->parent->parent->left == x->parent )
 	 {
-	    cout << "in the first else if" << endl;
+	    //cout << "in the first else if" << endl;
 	    RRotate( x->parent->parent );
 	    RRotate( x->parent );
 	 }
 	 else if( x->parent->right == x &&
 		    x->parent->parent->right == x->parent )
 	 {
-	    cout << "in the 2nd else if" << endl;
+	    //cout << "in the 2nd else if" << endl;
 	    LRotate( x->parent->parent );
 	    LRotate( x->parent );
 	 }
 	 else if( x->parent->left == x &&
 		    x->parent->parent->right == x->parent )
 	 {
-	    cout << "in the 3rd else if" << endl;
+	    //cout << "in the 3rd else if" << endl;
 	    RRotate( x -> parent );
 	    LRotate( x -> parent );
 	 }
 	 else
 	 {
-	    cout << "last, entering the LR" << endl;
+	    //cout << "last, entering the LR" << endl;
 	    LRotate( x -> parent );
-	    cout << "entering the RR" << endl;
+	    //cout << "entering the RR" << endl;
 	    RRotate( x -> parent );
-	    cout << "out of the RR?" << endl;
+	    //cout << "out of the RR?" << endl;
 	 }
       }
-      	 cout << "end of the while loop" << endl;
+      //cout << "end of the while loop" << endl;
     }
 
-   void replace (node *a, node *b)
+   void swap (node *a, node *b)
    {
       if (a == a -> parent -> left)
 	 a -> parent -> left = b;
@@ -179,7 +187,7 @@ class splayt
 	 b -> parent = a -> parent;
    }
    //insert a key into the splay tree
-   void insert (int d)
+   void insert (double d)
    {
       node *a = root;
       node *b = NULL;
@@ -187,20 +195,20 @@ class splayt
       while (a)
       {
 	 b = a;
-	 cout << "in the while loop FML" << endl;
+	 //cout << "in the while loop FML" << endl;
 	 if (a -> data < d)
 	 {
-	    cout << " in the if loop: " <<endl;
+	    //cout << " in the if loop: " <<endl;
 	    a = a -> right;
-	    cout << "out of the loop" <<endl;
+	    //cout << "out of the loop" <<endl;
 	    
 	 }
 	 else
 	    a = a -> left;
-	 cout << "out of the if/else in the while" << endl;
+	 //cout << "out of the if/else in the while" << endl;
       }
 
-      cout << "out of the while loop" << endl;
+      //cout << "out of the while loop" << endl;
       a = new node (d);
       a -> parent = b;
       
@@ -210,47 +218,63 @@ class splayt
 	 b -> right = a;
       else
 	 b -> left = a;
-      cout << "about to splay: " << endl;
+      //cout << "about to splay: " << endl;
       splay(a);
       size++;
    }
 
-   node* find (int d)
+   node* find (double d)
    {
       node *a = root;
+      // if the data is < than or > than or == to
       while (a)
       {
 	 if (a -> data < d)
 	    a = a -> right;
 	 else if (a -> data > d)
 	    a = a -> left;
-	 else
+	 else if (a -> data == d)
 	    return a;
+	 else
+	    return NULL;
       }
       return NULL;
    }
 
-   void del (int d)
+   void del (double d)
    {
       node *a = find (d);
       if (!a)
 	 return;
+      //cout << "about to splay in del." << endl;
       splay(a);
-
+      //cout << "done splaying....." << endl;
       if (!a -> right)
-	 replace (a, a -> left);
+      {
+	 //cout << "about to swap" << endl;
+	 swap (a, a -> left);
+	 //cout << "done the swap" << endl;
+      }
       else if (!a -> left)
-	 replace (a, a -> right);
+      {
+	 //cout << "about to swap in else if..." << endl;
+	 swap (a, a -> right);
+	 //cout << "done" << endl;
+      }
       else
       {
-	 node *b = mini (b -> right);
+	 //cout << "in the else... in del" << endl;
+	 node *b = mini(b -> right);
+	 //cout << "done making a node..." << endl;
 	 if (b -> parent != a)
 	 {
-	    replace (b, b -> right);
+	    //cout << "seg fault?" << endl;
+	    swap (b, b -> right);
 	    b -> right = a -> right;
 	    b -> right -> parent = b;
 	 }
-	 replace (a, b);
+	 //cout << "seg Fault?" << endl;
+	 swap (a, b);
 	 b -> left = a -> left;
 	 b -> left -> parent = b;
       }
@@ -260,8 +284,8 @@ class splayt
 
    void print()
    {
-      cout << "print seg fault?" << endl;
-      cout << root->data<< endl;
+      //cout << "print seg fault?" << endl;
+      cout << root->data << endl;
    }
 };
 

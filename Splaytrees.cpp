@@ -4,6 +4,7 @@
 // Description: Implement Splay trees
 //              in a language of out
 //              choice (c++)
+// resources: http://www.cs.uleth.ca/~gaur/post/splay/
 //************************************
 
 #include "Splay.h"
@@ -15,16 +16,43 @@ int main()
 {
    splayt a;
    
-   int val;
-   char exit = 'n';
-   while (exit == 'n')
+   double val;
+   char exit = 'y';
+   char func;
+   while (exit == 'y')
    {
-      cout << "please insert a int into the splay tree: ";
-      cin >> val;
-      a.insert(val);
-      cout << "print here: " << endl;
-      a.print();
-      cout << endl << "done printing" << endl;
+      cout << "Insert (I), Find (F), or Delete(D): ";
+      cin >> func;
+      switch (func)
+      {
+	 case 'I':
+	 case 'i':
+	 {
+	    cout << "enter the number you would like to insert: ";
+	    cin >> val;
+	    a.insert(val);
+	    break;
+	 }
+	 case 'F':
+	 case'f':
+	 {
+	    cout << "enter the number you would like to find: ";
+	    cin >> val;
+	    splayt::node* b = a.find(val);
+	    b->print();
+	    break;
+	 }
+	 case 'D':
+	 case 'd':
+	 {
+	    cout << "enter the number you would like to delete: ";
+	    cin >> val;
+	    a.del(val);
+	    break;
+	 }
+      }
+      cout << "would you like to continue? y = yes, n = no: ";
+      cin >> exit;
    }
    return 0;
 }
